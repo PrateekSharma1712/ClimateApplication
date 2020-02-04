@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.multiple.MultipleCityClimateActivity">
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/placesChipGroup"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:background="#FFCCCCCC"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/fetchWeatherButton"
+        android:layout_width="0dp"
+        android:text="Fetch Weather"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/placesChipGroup" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
