@@ -1,9 +1,20 @@
 <resources>
     <string name="app_name">WeatherApplication</string>
+    <string name="activity_landing">Weather Forecast</string>
 
     <string name="weather_icon">weather icon</string>
+    <string name="fetching_weather">fetching weather…</string>
+    <string name="connect_to_internet">Please connect to Internet</string>
     <string name="unable_to_fetch_location">Unable to fetch location</string>
+    <string name="no_location_permission_granted">No location permission granted</string>
 
     <string name="api_key">AIzaSyCPszcZL6wLK98YZZgAYHGGVA-R41MCRj8</string>
     <string name="multiple_places">Multiple Places</string>
+    <string name="city_forecast">%1s forecast for 5 days</string>
+    <string name="time">time</string>
+    <string name="icon">icon</string>
+    <string name="condition">cond</string>
+    <string name="min">min</string>
+    <string name="max">max</string>
+    <string name="wind">wind</string>
 </resources>

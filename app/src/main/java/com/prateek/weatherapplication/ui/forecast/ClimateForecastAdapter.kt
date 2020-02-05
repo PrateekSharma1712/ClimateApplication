@@ -4,12 +4,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.prateek.weatherapplication.R
 import com.prateek.weatherapplication.domain.model.Climate
+import com.prateek.weatherapplication.extractHourMinute
+import com.prateek.weatherapplication.framework.network.services.WEATHER_ICON_URL
 import kotlinx.android.synthetic.main.line_item_climate.view.*
 import kotlinx.android.synthetic.main.line_item_date_time.view.*
 
-class ClimateForecastAdapter(private val data: MutableList<Any>) :
+class ClimateForecastAdapter(private val data: List<Any>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class DateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -22,14 +25,13 @@ class ClimateForecastAdapter(private val data: MutableList<Any>) :
     inner class ClimateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(climate: Climate) {
-            itemView.timeTextView.text = climate.weatherDescription + climate.dateTime
+            val iconURL = WEATHER_ICON_URL + climate.icon + "@2x.png"
+            Glide.with(itemView).load(iconURL).into(itemView.weatherImageView)
+            itemView.weatherDescription.text = climate.weatherDescription
+            itemView.minTemperature.text = climate.minTemperature?.toString()
+            itemView.maxTemperature.text = climate.maxTemperature?.toString()
+            itemView.timeTextView.text = climate.dateText?.extractHourMinute()
         }
-    }
-
-    fun updateData(newData: List<Any>) {
-        data.clear()
-        data.addAll(newData)
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

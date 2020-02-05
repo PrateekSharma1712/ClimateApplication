@@ -24,4 +24,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/placesChipGroup" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/multipleCityWeatherRecyclerView"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fetchWeatherButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

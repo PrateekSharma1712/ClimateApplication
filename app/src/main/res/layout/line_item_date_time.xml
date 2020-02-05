@@ -1,8 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/dateTimeTextView"
     android:layout_width="match_parent"
-    android:padding="8dp"
-    tools:text="Date 1"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+    <TextView
+        android:id="@+id/dateTimeTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Date 1" />
+
+    <View
+        android:id="@+id/horizontalDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dateTimeTextView" />
+
+    <TextView
+        android:id="@+id/timeLabelTextView"
+        style="@style/ClimateLabelStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/time"
+        app:layout_constraintEnd_toStartOf="@id/iconLabelTextView"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/horizontalDivider" />
+
+    <TextView
+        android:id="@+id/iconLabelTextView"
+        style="@style/ClimateLabelStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/icon"
+        app:layout_constraintEnd_toStartOf="@id/descriptionLabelTextView"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@id/timeLabelTextView"
+        app:layout_constraintTop_toBottomOf="@id/horizontalDivider" />
+
+    <TextView
+        android:id="@+id/descriptionLabelTextView"
+        style="@style/ClimateLabelStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/condition"
+        app:layout_constraintEnd_toStartOf="@id/minTemperatureLabelTextView"
+        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintStart_toEndOf="@id/iconLabelTextView"
+        app:layout_constraintTop_toBottomOf="@id/horizontalDivider" />
+
+    <TextView
+        android:id="@+id/minTemperatureLabelTextView"
+        style="@style/ClimateLabelStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/min"
+        app:layout_constraintEnd_toStartOf="@id/maxLabelTextView"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@id/descriptionLabelTextView"
+        app:layout_constraintTop_toBottomOf="@id/horizontalDivider" />
+
+    <TextView
+        android:id="@+id/maxLabelTextView"
+        style="@style/ClimateLabelStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/max"
+        app:layout_constraintEnd_toStartOf="@id/windSpeedLabelTextView"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@id/minTemperatureLabelTextView"
+        app:layout_constraintTop_toBottomOf="@id/horizontalDivider" />
+
+    <TextView
+        android:id="@+id/windSpeedLabelTextView"
+        style="@style/ClimateLabelStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/wind"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@id/maxLabelTextView"
+        app:layout_constraintTop_toBottomOf="@id/horizontalDivider" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

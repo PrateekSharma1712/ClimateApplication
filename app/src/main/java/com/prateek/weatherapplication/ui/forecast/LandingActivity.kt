@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -17,7 +18,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import com.prateek.weatherapplication.R
-import com.prateek.weatherapplication.WeatherApplication
 import com.prateek.weatherapplication.ui.multiple.MultipleCityClimateActivity
 import kotlinx.android.synthetic.main.activity_landing.*
 
@@ -35,12 +35,20 @@ class LandingActivity : AppCompatActivity() {
 
         checkForLocationPermission()
         initializeObservers()
+        initialiseToolbar()
+    }
+
+    private fun initialiseToolbar() {
+        setSupportActionBar(toolbar)
     }
 
     private fun initializeObservers() {
         landingViewModel.climateForecastLiveData.observe(this, Observer { climateForecast ->
+
+            cityTextView.text = getString(R.string.city_forecast, climateForecast?.city)
+
             val climateMap = climateForecast.climates.groupBy { climate ->
-                climate.dateTime?.split(" ")?.get(0)
+                climate.dateText?.split(" ")?.get(0)
             }
             Log.d("climate forecast", climateMap.toString())
             val list = mutableListOf<Any>()
@@ -58,6 +66,26 @@ class LandingActivity : AppCompatActivity() {
             weatherByDayRecyclerView.apply {
                 hasFixedSize()
                 adapter = climateForecastAdapter
+            }
+        })
+
+        landingViewModel.apiLoadingStatus.observe(this, Observer {
+            when (it) {
+                LandingViewModel.ApiLoadingStatus.IS_LOADING -> {
+                    loaderFrameLayout.animate().alpha(1f).setDuration(500).start()
+                }
+                LandingViewModel.ApiLoadingStatus.LOADED -> {
+                    loaderFrameLayout.animate().alpha(0f).setDuration(500).start()
+                }
+                LandingViewModel.ApiLoadingStatus.UNABLE_TO_FETCH_LOCATION -> {
+                    showSnackBar(R.string.unable_to_fetch_location)
+                    progressBar.visibility = View.GONE
+                    message.text = getString(R.string.no_location_permission_granted)
+                }
+                else -> {
+                    progressBar.visibility = View.GONE
+                    message.text = getString(R.string.connect_to_internet)
+                }
             }
         })
     }
@@ -88,14 +116,13 @@ class LandingActivity : AppCompatActivity() {
     /**
      * fetch user's last known location
      * if location null - notify user
-     * it not null - ask [LandingViewModel] to [LandingViewModel.fetchWeather]
+     * it not null - ask [LandingViewModel] to [LandingViewModel.fetchForecast]
      */
     private fun fetchLastKnownLocation() {
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             if (location != null) {
                 Log.d("Location", location.latitude.toString() + location.longitude.toString())
-                //Fetch Weather for 5days/3 hours
-                landingViewModel.fetchWeather(location.latitude, location.longitude)
+                landingViewModel.fetchForecast(location.latitude, location.longitude)
             } else {
                 showSnackBar(R.string.unable_to_fetch_location)
             }
@@ -113,6 +140,23 @@ class LandingActivity : AppCompatActivity() {
             true
         } else {
             super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PERMISSION_REQUEST_LOCATION ->
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+                    fetchLastKnownLocation()
+                } else {
+                    landingViewModel.locationPermissionNotGranted()
+                }
         }
     }
 

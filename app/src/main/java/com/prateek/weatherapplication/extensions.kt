@@ -8,6 +8,7 @@ import android.text.style.RelativeSizeSpan
 import android.text.style.SuperscriptSpan
 import android.util.Log
 import java.io.IOException
+import java.util.*
 import kotlin.math.roundToInt
 
 /**
@@ -76,3 +77,5 @@ fun Double.toSpeedFormatInMPS(): String {
 fun Int.toPercentageFormat(): String {
     return "$this %"
 }
+
+fun String.extractHourMinute() =  this.split(" ")[1].substring(0, 5)
