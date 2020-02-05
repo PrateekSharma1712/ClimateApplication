@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="@string/multiple_places"
+        android:title="@string/add_place"
         app:showAsAction="withText|always"
-        android:id="@+id/multiplePlacesMenuItem"
+        android:id="@+id/addPlaceMenuItem"
         android:visible="true" />
 
 </menu>

@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 
 data class City(
     @Json(name = "coord")
-    val coord: Coord?,
+    val coordinates: Coord?,
     @Json(name = "country")
     val country: String?,
     @Json(name = "id")

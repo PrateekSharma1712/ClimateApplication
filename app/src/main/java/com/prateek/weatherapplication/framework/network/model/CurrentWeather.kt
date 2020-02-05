@@ -6,15 +6,13 @@ data class CurrentWeather(
     @Json(name = "name")
     val name: String?,
     @Json(name = "coord")
-    val coord: Coord?,
+    val coordinates: Coord?,
     @Json(name = "main")
     val main: Main?,
     @Json(name = "dt")
     val dt: Int?,
     @Json(name = "wind")
     val wind: Wind?,
-    @Json(name = "rain")
-    val rain: Rain?,
     @Json(name = "clouds")
     val clouds: Clouds?,
     @Json(name = "weather")

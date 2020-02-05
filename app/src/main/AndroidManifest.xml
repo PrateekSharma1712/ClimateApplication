@@ -18,7 +18,9 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="m">
-        <activity android:name=".ui.multiple.MultipleCityClimateActivity" />
+        <activity
+            android:name=".ui.multiple.MultipleCityClimateActivity"
+            android:parentActivityName=".ui.forecast.LandingActivity" />
         <activity android:name=".ui.forecast.LandingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

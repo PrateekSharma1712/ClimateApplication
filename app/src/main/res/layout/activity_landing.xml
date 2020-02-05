@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="@dimen/dimen_0dp"
+        android:elevation="@dimen/dimen_8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,23 +21,23 @@
 
     <TextView
         android:id="@+id/cityTextView"
+        style="@style/CityHeaderStyle"
         android:layout_width="0dp"
-        android:textStyle="bold"
-        android:textAlignment="textStart"
-        tools:text="@string/city_forecast"
-        android:padding="8dp"
-        android:textSize="20sp"
-        android:textColor="@android:color/black"
         android:layout_height="wrap_content"
+        android:alpha="0"
+        android:padding="@dimen/dimen_8dp"
+        android:textAlignment="textStart"
         app:layout_constraintBottom_toTopOf="@id/weatherByDayRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:text="@string/city_forecast" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/weatherByDayRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:alpha="0"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -49,19 +49,19 @@
         android:id="@+id/loaderFrameLayout"
         android:layout_width="@dimen/dimen_0dp"
         android:layout_height="@dimen/dimen_0dp"
+        android:alpha="0"
         android:background="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <ProgressBar
             android:id="@+id/progressBar"
-            android:foregroundTint="@color/colorPrimaryDark"
+            android:layout_width="@dimen/dimen_40dp"
+            android:layout_height="@dimen/dimen_40dp"
             android:layout_gravity="center"
-            android:layout_width="60dp"
-            android:layout_height="60dp" />
+            android:foregroundTint="@color/colorPrimaryDark" />
 
         <TextView
             android:id="@+id/message"
@@ -72,5 +72,23 @@
             android:text="@string/fetching_weather" />
 
     </FrameLayout>
+
+    <Button
+        android:id="@+id/noNetworkImageView"
+        style="?attr/borderlessButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:alpha="1"
+        android:background="@android:color/white"
+        android:clickable="false"
+        android:drawableTop="@drawable/ic_unable_to_download"
+        android:drawableTint="@android:color/black"
+        android:padding="@dimen/dimen_40dp"
+        android:text="@string/connect_to_internet"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

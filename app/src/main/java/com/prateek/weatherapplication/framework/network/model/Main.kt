@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 
 data class Main(
     @Json(name = "grnd_level")
-    val grndLevel: Double?,
+    val groundLevel: Double?,
     @Json(name = "humidity")
     val humidity: Int?,
     @Json(name = "pressure")

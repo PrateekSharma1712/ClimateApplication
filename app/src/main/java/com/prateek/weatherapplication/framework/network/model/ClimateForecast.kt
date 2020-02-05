@@ -7,13 +7,11 @@ data class ClimateForecast(
     @Json(name = "clouds")
     val clouds: Clouds?,
     @Json(name = "dt")
-    val dt: Int?,
+    val date: Int?,
     @Json(name = "dt_txt")
-    val dtTxt: String?,
+    val dateText: String?,
     @Json(name = "main")
     val main: Main?,
-    @Json(name = "rain")
-    val rain: Rain?,
     @Json(name = "sys")
     val sys: Sys?,
     @Json(name = "weather")

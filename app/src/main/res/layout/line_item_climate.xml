@@ -2,76 +2,84 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginTop="@dimen/dimen_16dp"
-    android:layout_marginBottom="@dimen/dimen_16dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/dimen_8dp"
+    android:layout_marginTop="@dimen/dimen_4dp"
+    android:layout_marginEnd="@dimen/dimen_8dp">
 
     <TextView
-        android:id="@+id/timeLabelTextView"
-        style="@style/ClimateLabelStyle"
-        android:layout_width="0dp"
+        android:id="@+id/timeTextView"
+        style="@style/ClimateValueStyle"
+        android:layout_width="@dimen/dimen_0dp"
         android:layout_height="wrap_content"
         android:text="@string/time"
+        app:layout_constraintBottom_toBottomOf="@id/weatherImageView"
         app:layout_constraintEnd_toStartOf="@id/weatherImageView"
-        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintHorizontal_weight="1.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/weatherImageView" />
 
     <ImageView
         android:id="@+id/weatherImageView"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        tools:src="@mipmap/ic_launcher"
-        android:text="@string/icon"
+        android:layout_width="@dimen/dimen_30dp"
+        android:layout_height="@dimen/dimen_30dp"
+        android:layout_marginStart="@dimen/dimen_16dp"
         android:contentDescription="@string/weather_icon"
-        app:layout_constraintEnd_toStartOf="@id/descriptionLabelTextView"
+        android:text="@string/icon"
+        app:layout_constraintEnd_toStartOf="@id/weatherDescriptionTextView"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@id/timeLabelTextView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/timeTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@mipmap/ic_launcher" />
 
     <TextView
-        android:id="@+id/descriptionLabelTextView"
-        style="@style/ClimateLabelStyle"
+        android:id="@+id/weatherDescriptionTextView"
+        style="@style/ClimateValueStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_16dp"
         android:text="@string/condition"
-        app:layout_constraintEnd_toStartOf="@id/minTemperatureLabelTextView"
+        app:layout_constraintBottom_toBottomOf="@id/weatherImageView"
+        app:layout_constraintEnd_toStartOf="@id/minTemperatureTextView"
         app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toEndOf="@id/weatherImageView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/weatherImageView" />
 
     <TextView
-        android:id="@+id/minTemperatureLabelTextView"
-        style="@style/ClimateLabelStyle"
+        android:id="@+id/minTemperatureTextView"
+        style="@style/ClimateValueStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/min"
-        app:layout_constraintEnd_toStartOf="@id/maxLabelTextView"
+        app:layout_constraintBottom_toBottomOf="@id/weatherImageView"
+        app:layout_constraintEnd_toStartOf="@id/maxTemperatureTextView"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@id/descriptionLabelTextView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/weatherDescriptionTextView"
+        app:layout_constraintTop_toTopOf="@id/weatherImageView"
+        tools:text="@string/min" />
 
     <TextView
-        android:id="@+id/maxLabelTextView"
-        style="@style/ClimateLabelStyle"
+        android:id="@+id/maxTemperatureTextView"
+        style="@style/ClimateValueStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/max"
-        app:layout_constraintEnd_toStartOf="@id/windSpeedLabelTextView"
+        app:layout_constraintBottom_toBottomOf="@id/weatherImageView"
+        app:layout_constraintEnd_toStartOf="@id/windSpeedTextView"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@id/minTemperatureLabelTextView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/minTemperatureTextView"
+        app:layout_constraintTop_toTopOf="@id/weatherImageView"
+        tools:text="@string/max" />
 
     <TextView
-        android:id="@+id/windSpeedLabelTextView"
-        style="@style/ClimateLabelStyle"
+        android:id="@+id/windSpeedTextView"
+        style="@style/ClimateValueStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/wind"
+        app:layout_constraintBottom_toBottomOf="@id/weatherImageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toEndOf="@id/maxLabelTextView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/maxTemperatureTextView"
+        app:layout_constraintTop_toTopOf="@id/weatherImageView"
+        tools:text="@string/wind" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

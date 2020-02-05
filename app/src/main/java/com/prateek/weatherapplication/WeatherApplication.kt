@@ -1,9 +1,6 @@
 package com.prateek.weatherapplication
 
 import android.app.Application
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import com.prateek.weatherapplication.di.AppComponent
 import com.prateek.weatherapplication.di.AppModule
 import com.prateek.weatherapplication.di.DaggerAppComponent
@@ -32,13 +29,4 @@ class WeatherApplication : Application() {
         application = this
         appComponent = initAppComponent(this)
     }
-
-    fun isConnectedToInternet(): Boolean {
-        val connectivityManager: ConnectivityManager =
-            applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
-        return activeNetwork?.isConnectedOrConnecting ?: false
-    }
-
-
 }

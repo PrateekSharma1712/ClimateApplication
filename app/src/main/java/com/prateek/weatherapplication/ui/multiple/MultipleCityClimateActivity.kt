@@ -4,6 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -22,6 +25,9 @@ class MultipleCityClimateActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MultipleCityViewModel
     private val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
+    private lateinit var autoCompleteIntent: Intent
+    private var addPlaceMenuItem: MenuItem? = null
+
     private lateinit var climateForecastAdapter: ClimateForecastAdapter
     private val autoCompleteIntentBuilder = Autocomplete.IntentBuilder(
         AutocompleteActivityMode.OVERLAY, fields
@@ -33,17 +39,34 @@ class MultipleCityClimateActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(MultipleCityViewModel::class.java)
 
-        val intent = autoCompleteIntentBuilder.build(this)
-
-        placesChipGroup.setOnClickListener {
-            startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
-        }
+        autoCompleteIntent = autoCompleteIntentBuilder.build(this)
 
         fetchWeatherButton.setOnClickListener {
             viewModel.fetchWeatherButtonClicked()
         }
 
         initialiseObservers()
+        initialiseToolbar()
+    }
+
+    private fun initialiseToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_add_places, menu)
+        addPlaceMenuItem = menu?.findItem(R.id.addPlaceMenuItem)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.addPlaceMenuItem) {
+            startActivityForResult(autoCompleteIntent, AUTOCOMPLETE_REQUEST_CODE)
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onStart() {
@@ -60,14 +83,43 @@ class MultipleCityClimateActivity : AppCompatActivity() {
     }
 
     private fun initialiseObservers() {
-        viewModel.climateForecastLiveData.observe(this, Observer { climateForecast ->
-            climateForecastAdapter =
-                ClimateForecastAdapter(
-                    climateForecast.climates
-                )
+        viewModel.climateForecastLiveData.observe(this, Observer { climates ->
+            climateForecastAdapter = ClimateForecastAdapter(climates, true)
             multipleCityWeatherRecyclerView.apply {
                 hasFixedSize()
                 adapter = climateForecastAdapter
+            }
+        })
+
+        viewModel.listOfNamesLiveData.observe(this, Observer {
+            Log.d("names size", it.size.toString())
+            if (it.size == 7) {
+                addPlaceMenuItem?.isVisible = false
+            }
+
+            if (it.size >= 3) {
+                fetchWeatherButton.visibility = View.VISIBLE
+            } else {
+                fetchWeatherButton.visibility = View.GONE
+            }
+
+            if (it.isNotEmpty()) {
+                addPlaceInstructionTextView.visibility = View.GONE
+            }
+        })
+
+        viewModel.apiLoadingStatus.observe(this, Observer {
+            when (it) {
+                MultipleCityViewModel.ApiLoadingStatus.IS_LOADING -> {
+                    loaderFrameLayout.animate().alpha(1f).setDuration(500).start()
+                }
+                MultipleCityViewModel.ApiLoadingStatus.LOADED -> {
+                    loaderFrameLayout.animate().alpha(0f).setDuration(500).start()
+                }
+                else -> {
+                    progressBar.visibility = View.GONE
+                    message.text = getString(R.string.no_places_found)
+                }
             }
         })
     }
@@ -78,11 +130,17 @@ class MultipleCityClimateActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 data?.let {
                     val selectedPlace = Autocomplete.getPlaceFromIntent(it)
-                    addChip(selectedPlace.name!!)
-                    viewModel.onPlaceSelected(
-                        selectedPlace.latLng?.latitude ?: 0.0,
-                        selectedPlace.latLng?.longitude ?: 0.0
-                    )
+                    selectedPlace.name?.let { name ->
+                        addChip(
+                            selectedPlace.latLng?.latitude ?: 0.0,
+                            selectedPlace.latLng?.longitude ?: 0.0,
+                            name
+                        )
+                        viewModel.onPlaceSelected(
+                            selectedPlace.latLng?.latitude ?: 0.0,
+                            selectedPlace.latLng?.longitude ?: 0.0, name
+                        )
+                    }
                 }
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 data?.let {
@@ -95,9 +153,14 @@ class MultipleCityClimateActivity : AppCompatActivity() {
         }
     }
 
-    private fun addChip(text: String) {
+    private fun addChip(latitude: Double, longitude: Double, text: String) {
         val chip = Chip(placesChipGroup.context)
         chip.text = text
+        chip.isCloseIconVisible = true
+        chip.setOnCloseIconClickListener {
+            placesChipGroup.removeView(chip)
+            viewModel.onPlaceRemoved(latitude, longitude, text)
+        }
         placesChipGroup.addView(chip)
     }
 

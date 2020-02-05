@@ -65,8 +65,8 @@ class WeatherRepository @Inject constructor(
                     weatherDescription = it?.weather?.get(0)?.description,
                     icon = it?.weather?.get(0)?.icon,
                     windSpeed = it?.wind?.speed,
-                    dateTime = it?.dt?.times(1000L),
-                    dateText = it?.dtTxt
+                    dateTime = it?.date?.times(1000L),
+                    dateText = it?.dateText
                 )
             )
         }

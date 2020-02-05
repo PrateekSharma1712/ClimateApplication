@@ -8,7 +8,7 @@ data class CurrentWeatherResponseDTO(
     @Json(name = "cod")
     val cod: String?,
     @Json(name="calctime")
-    val calcTime: Double?,
+    val calculationTime: Double?,
     @Json(name = "list")
     val list: List<CurrentWeather?>?
 )

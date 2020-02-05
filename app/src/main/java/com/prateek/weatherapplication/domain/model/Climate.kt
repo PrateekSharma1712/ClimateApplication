@@ -7,6 +7,6 @@ data class Climate(
     val icon: String?,
     val windSpeed: Double?,
     val dateTime: Long?,
-    val dateText: String? = "",
+    val dateText: String? = null,
     val city: String? = ""
 )

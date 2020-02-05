@@ -6,33 +6,101 @@
     android:layout_height="match_parent"
     tools:context=".ui.multiple.MultipleCityClimateActivity">
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/placesChipGroup"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:background="#FFCCCCCC"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="@dimen/dimen_8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:title="@string/activity_multiple_places" />
+
+    <HorizontalScrollView
+        android:id="@+id/chipHorizontalScrollView"
+        android:layout_width="@dimen/dimen_0dp"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/placesChipGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/cardview_shadow_start_color"
+            android:paddingStart="@dimen/dimen_16dp"
+            android:paddingEnd="@dimen/dimen_16dp"
+            app:itemSpacing="@dimen/dimen_8dp"
+            app:singleLine="true" />
+
+    </HorizontalScrollView>
 
     <Button
         android:id="@+id/fetchWeatherButton"
-        android:layout_width="0dp"
-        android:text="Fetch Weather"
+        android:layout_width="@dimen/dimen_0dp"
         android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/white"
+        android:drawableLeft="@drawable/ic_search"
+        android:text="@string/fetch_weather"
+        android:textColor="@android:color/black"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/placesChipGroup" />
+        app:layout_constraintTop_toBottomOf="@id/chipHorizontalScrollView" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/multipleCityWeatherRecyclerView"
+        android:layout_width="@dimen/dimen_0dp"
+        android:layout_height="@dimen/dimen_0dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fetchWeatherButton"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="0dp"
-        android:layout_height="0dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fetchWeatherButton" />
+
+    <FrameLayout
+        android:id="@+id/loaderFrameLayout"
+        android:layout_width="@dimen/dimen_0dp"
+        android:layout_height="@dimen/dimen_0dp"
+        android:alpha="0"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fetchWeatherButton">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="@dimen/dimen_40dp"
+            android:layout_height="@dimen/dimen_40dp"
+            android:layout_gravity="center"
+            android:foregroundTint="@color/colorPrimaryDark" />
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dimen_64dp"
+            android:text="@string/fetching_weather" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/addPlaceInstructionTextView"
+        android:layout_width="@dimen/dimen_0dp"
+        android:layout_height="@dimen/dimen_0dp"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:text="@string/tap_on_to_add_place"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

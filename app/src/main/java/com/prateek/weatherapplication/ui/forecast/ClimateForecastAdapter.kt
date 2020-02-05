@@ -11,14 +11,19 @@ import com.prateek.weatherapplication.extractHourMinute
 import com.prateek.weatherapplication.framework.network.services.WEATHER_ICON_URL
 import kotlinx.android.synthetic.main.line_item_climate.view.*
 import kotlinx.android.synthetic.main.line_item_date_time.view.*
+import kotlin.math.roundToInt
 
-class ClimateForecastAdapter(private val data: List<Any>) :
+class ClimateForecastAdapter(private val data: List<Any>, private val isMultipleCityAdapter: Boolean) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    inner class DateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(dateText: String) {
-            itemView.dateTimeTextView.text = dateText
+        fun bind(headerText: String) {
+            if (isMultipleCityAdapter) {
+                itemView.timeLabelTextView.text = headerText
+            } else {
+                itemView.dateTimeTextView.text = headerText
+            }
         }
     }
 
@@ -27,21 +32,29 @@ class ClimateForecastAdapter(private val data: List<Any>) :
         fun bind(climate: Climate) {
             val iconURL = WEATHER_ICON_URL + climate.icon + "@2x.png"
             Glide.with(itemView).load(iconURL).into(itemView.weatherImageView)
-            itemView.weatherDescription.text = climate.weatherDescription
-            itemView.minTemperature.text = climate.minTemperature?.toString()
-            itemView.maxTemperature.text = climate.maxTemperature?.toString()
-            itemView.timeTextView.text = climate.dateText?.extractHourMinute()
+            itemView.timeTextView.text = if (isMultipleCityAdapter) climate.city else climate.dateText?.extractHourMinute()
+            itemView.weatherDescriptionTextView.text = climate.weatherDescription
+            itemView.minTemperatureTextView.text = climate.minTemperature?.roundToInt()?.toString()
+            itemView.maxTemperatureTextView.text = climate.maxTemperature?.roundToInt()?.toString()
+            itemView.windSpeedTextView.text = climate.windSpeed?.roundToInt()?.toString()
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == DATE_VIEW_TYPE) {
-            return DateViewHolder(
-                LayoutInflater.from(parent.context).inflate(
-                    R.layout.line_item_date_time,
-                    parent,
-                    false
-                )
+            val view = LayoutInflater.from(parent.context).inflate(
+                R.layout.line_item_date_time,
+                parent,
+                false
+            )
+
+            if (isMultipleCityAdapter) {
+                view.dateTimeTextView.visibility = View.GONE
+                view.horizontalDivider.visibility = View.GONE
+            }
+
+            return HeaderViewHolder(
+                view
             )
         } else {
             return ClimateViewHolder(
@@ -60,7 +73,7 @@ class ClimateForecastAdapter(private val data: List<Any>) :
     override fun getItemCount() = data.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is DateViewHolder) {
+        if (holder is HeaderViewHolder) {
             holder.bind(data[position] as String)
         } else {
             (holder as ClimateViewHolder).bind(data[position] as Climate)

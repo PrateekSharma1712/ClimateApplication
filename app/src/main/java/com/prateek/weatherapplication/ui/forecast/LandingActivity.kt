@@ -1,9 +1,14 @@
 package com.prateek.weatherapplication.ui.forecast
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -26,6 +31,10 @@ class LandingActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var landingViewModel: LandingViewModel
     private lateinit var climateForecastAdapter: ClimateForecastAdapter
+    private lateinit var connectivityManager: ConnectivityManager
+    private lateinit var networkRequest: NetworkRequest
+    private lateinit var networkAvailabilityCallback: ConnectivityManager.NetworkCallback
+    private var multiplePlacesMenuItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,9 +42,26 @@ class LandingActivity : AppCompatActivity() {
 
         landingViewModel = ViewModelProvider(this).get(LandingViewModel::class.java)
 
-        checkForLocationPermission()
         initializeObservers()
         initialiseToolbar()
+
+        connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        networkRequest = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI).build()
+
+        networkAvailabilityCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                landingViewModel.updateNetworkConnectivity(true)
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                landingViewModel.updateNetworkConnectivity(false)
+            }
+        }
     }
 
     private fun initialiseToolbar() {
@@ -43,25 +69,31 @@ class LandingActivity : AppCompatActivity() {
     }
 
     private fun initializeObservers() {
-        landingViewModel.climateForecastLiveData.observe(this, Observer { climateForecast ->
-
-            cityTextView.text = getString(R.string.city_forecast, climateForecast?.city)
-
-            val climateMap = climateForecast.climates.groupBy { climate ->
-                climate.dateText?.split(" ")?.get(0)
+        landingViewModel.isNetworkConnected.observe(this, Observer {
+            Log.d("isNetworkConnected", it.toString())
+            if (it) {
+                checkForLocationPermission()
+                loaderFrameLayout?.animate()?.alpha(1f)?.setDuration(500)?.start()
+                noNetworkImageView?.animate()?.alpha(0f)?.setDuration(500)?.start()
+                weatherByDayRecyclerView?.animate()?.alpha(1f)?.setDuration(500)?.start()
+                cityTextView?.animate()?.alpha(1f)?.setDuration(500)?.start()
+                multiplePlacesMenuItem?.isVisible = true
+            } else {
+                loaderFrameLayout?.animate()?.alpha(0f)?.setDuration(500)?.start()
+                noNetworkImageView?.animate()?.alpha(1f)?.setDuration(500)?.start()
+                weatherByDayRecyclerView?.animate()?.alpha(0f)?.setDuration(500)?.start()
+                cityTextView?.animate()?.alpha(0f)?.setDuration(500)?.start()
+                multiplePlacesMenuItem?.isVisible = false
             }
-            Log.d("climate forecast", climateMap.toString())
-            val list = mutableListOf<Any>()
-            climateMap.keys.forEach { key ->
-                key?.let {
-                    list.add(it)
-                    list.addAll(climateMap[it]?.toList()!!)
-                }
-            }
+        })
+
+        landingViewModel.climateForecastLiveData.observe(this, Observer {
+
+            cityTextView.text = getString(R.string.city_forecast, landingViewModel.city)
 
             climateForecastAdapter =
                 ClimateForecastAdapter(
-                    list
+                    it, false
                 )
             weatherByDayRecyclerView.apply {
                 hasFixedSize()
@@ -102,8 +134,7 @@ class LandingActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                    Manifest.permission.ACCESS_COARSE_LOCATION
                 ),
                 PERMISSION_REQUEST_LOCATION
             )
@@ -125,12 +156,25 @@ class LandingActivity : AppCompatActivity() {
                 landingViewModel.fetchForecast(location.latitude, location.longitude)
             } else {
                 showSnackBar(R.string.unable_to_fetch_location)
+                progressBar.visibility = View.GONE
+                message.text = getString(R.string.unable_to_fetch_location)
             }
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        connectivityManager.registerNetworkCallback(networkRequest, networkAvailabilityCallback)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        connectivityManager.unregisterNetworkCallback(networkAvailabilityCallback)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_multiple_places, menu)
+        multiplePlacesMenuItem = menu?.findItem(R.id.multiplePlacesMenuItem)
         return super.onCreateOptionsMenu(menu)
     }
 

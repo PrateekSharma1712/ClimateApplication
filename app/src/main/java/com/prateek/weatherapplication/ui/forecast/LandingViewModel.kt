@@ -16,8 +16,11 @@ class LandingViewModel : ViewModel() {
     @Inject
     lateinit var coroutineScope: CoroutineScope
 
-    private val _climateForecastLiveData = MutableLiveData<ClimateForecast>()
-    val climateForecastLiveData: MutableLiveData<ClimateForecast>
+    val isNetworkConnected = MutableLiveData<Boolean>()
+    var city : String? = ""
+
+    private val _climateForecastLiveData = MutableLiveData<List<Any>>()
+    val climateForecastLiveData: MutableLiveData<List<Any>>
         get() = _climateForecastLiveData
 
     private val _apiLoadingStatus = MutableLiveData<ApiLoadingStatus>()
@@ -37,7 +40,9 @@ class LandingViewModel : ViewModel() {
         coroutineScope.launch {
             val climateForecast = weatherRepository.getForecast(latitude, longitude)
             climateForecast?.let {
-                _climateForecastLiveData.postValue(it)
+
+                city = it.city
+                _climateForecastLiveData.postValue(createClimateForecastList(it))
                 _apiLoadingStatus.postValue(ApiLoadingStatus.LOADED)
                 return@launch
             }
@@ -45,7 +50,27 @@ class LandingViewModel : ViewModel() {
         }
     }
 
+    fun createClimateForecastList(climateForecast: ClimateForecast): List<Any> {
+        val climateMap = climateForecast.climates.groupBy { climate ->
+            climate.dateText?.split(" ")?.get(0)
+        }
+
+        val list = mutableListOf<Any>()
+        climateMap.keys.forEach { key ->
+            key?.let { key ->
+                list.add(key)
+                list.addAll(climateMap[key]?.toList()!!)
+            }
+        }
+
+        return list
+    }
+
     fun locationPermissionNotGranted() {
         _apiLoadingStatus.postValue(ApiLoadingStatus.UNABLE_TO_FETCH_LOCATION)
+    }
+
+    fun updateNetworkConnectivity(isConnected: Boolean) {
+        isNetworkConnected.postValue(isConnected)
     }
 }
