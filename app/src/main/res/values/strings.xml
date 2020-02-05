@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">WeatheApplication</string>
+    <string name="app_name">WeatherApplication</string>
 
     <string name="weather_icon">weather icon</string>
     <string name="unable_to_fetch_location">Unable to fetch location</string>
+
+    <string name="api_key">AIzaSyCPszcZL6wLK98YZZgAYHGGVA-R41MCRj8</string>
+    <string name="multiple_places">Multiple Places</string>
 </resources>

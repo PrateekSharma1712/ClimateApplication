@@ -1,4 +1,4 @@
-package com.prateek.weatheapplication
+package com.prateek.weatherapplication
 
 import org.junit.Test
 
